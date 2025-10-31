@@ -112,7 +112,10 @@ def erosao(A, B):
 
     A_pad = pad_image(A, pad_top, pad_bottom, pad_left, pad_right, pad_value=0)
     altura_A = len(A)
-    largura_A = len(A[0]) if altura_A>0 else 0
+    if altura_A > 0:
+        largura_A = len(A[0])
+    else:
+        largura_A = 0
 
     saida = [[0]*largura_A for _ in range(altura_A)]
 
@@ -150,36 +153,47 @@ def mostrar_info_operacao(nome):
 # -------------------------
 if __name__ == "__main__":
     # Caminho fixo da imagem dentro da pasta "imagens"
-    caminho = "imagens/brasil.png"
+    caminho = "imagens/masqueico.jpg"
     print(f"Carregando e binarizando: {caminho}")
     img = carregar_imagem_binaria(caminho, limiar=127)
 
     # Defina aqui o elemento estruturante (ex.: cruze 3x3)
-    B = [
-        [0,1,0],
-        [1,1,1],
-        [0,1,0]
-    ]
+    B = [[0,1,0],
+         [1,1,1],
+         [0,1,0]]
+    
+    #Quadrado 3x3 Expansão/contração em todas as direções, mais suave.
+    # B = [[1,1,1],
+    #      [1,1,1],
+    #      [1,1,1]]
+    # Linha horizontal Afeta somente no eixo X.
+    # B = [[0,0,0],
+    #      [1,1,1],
+    #      [0,0,0]]
+    
+    # Linha vertical Afeta somente no eixo Y.
+    # B = [[0,1,0],
+    #      [0,1,0],
+    #      [0,1,0]]
 
-    # Você pode alterar B para uma matriz quadrada 3x3 cheia de 1's ou outro formato.
     mostrar_info_operacao("Dilatação")
     dil = dilatacao(img, B)
-    salvar_imagem_binaria(dil, "imagens/resultado_dilatacao.png")
+    salvar_imagem_binaria(dil, "imagens/resultado_dilatacao.jpg")
     print("  -> resultado_dilatacao.png salvo.")
 
     mostrar_info_operacao("Erosão")
     ero = erosao(img, B)
-    salvar_imagem_binaria(ero, "imagens/resultado_erosao.png")
+    salvar_imagem_binaria(ero, "imagens/resultado_erosao.jpg")
     print("  -> resultado_erosao.png salvo.")
 
     mostrar_info_operacao("Abertura")
     abi = abertura(img, B)
-    salvar_imagem_binaria(abi, "imagens/resultado_abertura.png")
+    salvar_imagem_binaria(abi, "imagens/resultado_abertura.jpg")
     print("  -> resultado_abertura.png salvo.")
 
     mostrar_info_operacao("Fechamento")
     fec = fechamento(img, B)
-    salvar_imagem_binaria(fec, "imagens/resultado_fechamento.png")
+    salvar_imagem_binaria(fec, "imagens/resultado_fechamento.jpg")
     print("  -> resultado_fechamento.png salvo.")
 
     print("Processamento concluído. Verifique os arquivos gerados.")
